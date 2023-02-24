@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  backend:
+    container_name: "deployment-service"
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0
+    working_dir: /app
+    ports:
+      - "8088:8088"
+    volumes:
+      - .:/app
+    restart: always
