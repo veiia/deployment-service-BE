@@ -1,0 +1,2 @@
+CONTAINER_ID = str
+IMAGE_ID = str
