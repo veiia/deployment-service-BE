@@ -1,4 +1,6 @@
 import subprocess
+from typing import Any
+
 import docker
 from app.constants import CONTAINER_ID
 
@@ -14,7 +16,7 @@ class DockerContainerManager:
     def __init__(self):
         self.client = docker.client.from_env()
 
-    def get_list_of_containers(self):
+    def get_list_of_containers(self, username: str) -> list[Any]:
         return self.client.containers.list()
 
     def create_container(self, image: str, name: str) -> CONTAINER_ID:
@@ -40,7 +42,7 @@ class DockerContainerManager:
         cmd_string = f"docker build -d {container_id}"
         subprocess.run(cmd_string)
 
-    def get_info_about_container(self, container_id: CONTAINER_ID):
+    def get_info_about_container(self, container_id: CONTAINER_ID) -> dict[Any, Any]:
         container = self.client.containers.get(container_id)
         return container.attrs
 
@@ -77,3 +79,15 @@ class DockerContainerManager:
         container.start()
         container.reload()
         return container.status
+
+    def kill_container(self, container_id: CONTAINER_ID):
+        container = self.client.containers.get(container_id)
+        container.kill()
+        container.reload()
+        return container.status
+
+    def rename_container(self, container_id: CONTAINER_ID, new_name: str):
+        container = self.client.containers.get(container_id)
+        container.rename(new_name)
+        container.reload()
+        return container

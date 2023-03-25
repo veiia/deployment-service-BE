@@ -23,7 +23,8 @@ def delete_container(container_id: CONTAINER_ID):
         is_deleted = actions.delete_container(container_id=container_id)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
     if is_deleted:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -50,7 +51,8 @@ def stop_container(container_id: CONTAINER_ID):
         return actions.stop_container(container_id=container_id)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -62,7 +64,8 @@ def run_container(container_id: CONTAINER_ID):
         return actions.run_container(container_id=container_id)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -74,7 +77,21 @@ def pause_container(container_id: CONTAINER_ID):
         return actions.pause_container(container_id=container_id)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+
+@containers_router.post(
+    "/{container_id}/kill", response_model=responses.ContainerStatusResponse
+)
+def kill_container(container_id: CONTAINER_ID):
+    try:
+        return actions.kill_container(container_id=container_id)
+    except docker.errors.NotFound:
+        return JSONResponse(
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -84,12 +101,11 @@ def pause_container(container_id: CONTAINER_ID):
 def get_info_about_container(container_id: CONTAINER_ID):
     try:
         container_attrs = actions.get_info_about_container(container_id=container_id)
-        return JSONResponse(
-            content=container_attrs, status_code=status.HTTP_200_OK
-        )
+        return JSONResponse(content=container_attrs, status_code=status.HTTP_200_OK)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
 
@@ -101,17 +117,17 @@ def get_status_of_container(container_id: CONTAINER_ID):
         return actions.get_status_of_container(container_id=container_id)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
 
-@containers_router.get(
-    "/{container_id}/logs", response_model=responses.LogsResponse
-)
+@containers_router.get("/{container_id}/logs", response_model=responses.LogsResponse)
 def get_status_of_container(container_id: CONTAINER_ID, tail: int = 20):
     try:
         return actions.get_logs_of_container(container_id=container_id, tail=tail)
     except docker.errors.NotFound:
         return JSONResponse(
-            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+            content={"message": f"Container {container_id} Not Found"},
+            status_code=status.HTTP_404_NOT_FOUND,
         )

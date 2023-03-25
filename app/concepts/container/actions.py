@@ -55,6 +55,11 @@ def get_status_of_container(container_id: CONTAINER_ID) -> ContainerStatus:
 
 def get_logs_of_container(container_id: CONTAINER_ID, tail: int = 20) -> Logs:
     bytes_string_of_logs = manager.get_logs_of_container(container_id, tail)
-    split_logs_by_lines = bytes_string_of_logs.decode("utf-8").split('\n')
+    split_logs_by_lines = bytes_string_of_logs.decode("utf-8").split("\n")
     logs = [line for line in split_logs_by_lines]
     return Logs(id=container_id, logs=logs)
+
+
+def kill_container(container_id: CONTAINER_ID) -> ContainerStatus:
+    status = manager.kill_container(container_id)
+    return ContainerStatus(id=container_id, status=status)

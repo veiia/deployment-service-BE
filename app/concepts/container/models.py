@@ -13,7 +13,7 @@ class ContainerID(BaseModel):
 
 class ContainerStatus(ContainerID):
     status: str
-    #todo расширить модельку статуса
+    # TODO: расширить модельку статуса (добавить isrunning is paused и тд)
 
 
 class Container(ContainerStatus):
