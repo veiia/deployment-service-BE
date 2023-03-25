@@ -17,33 +17,36 @@ class DockerContainerManager:
     def get_list_of_containers(self):
         return self.client.containers.list()
 
-    def create_container(self) -> CONTAINER_ID:
-        container = self.client.containers.create('nginx')
+    def create_container(self, image: str) -> CONTAINER_ID:
+        container = self.client.containers.create(image)
         return container
 
-    def delete_container(self, container_id: CONTAINER_ID):
-        container = self.client.get(container_id)
-        container.remove()
-        # cmd_string = f"docker rm {container_id}"
-        # subprocess.run(cmd_string)
+    def delete_container(
+        self, container_id: CONTAINER_ID, is_delete_volumes: bool = True
+    ) -> bool:
+        container = self.client.containers.get(container_id)
+        container.remove(v=is_delete_volumes)
+        try:
+            container.reload()
+            return False
+        except docker.errors.NotFound:
+            return True
 
     def update_container(self, container_id: CONTAINER_ID):
         cmd_string = f"docker build -d {container_id}"
         subprocess.run(cmd_string)
 
     def get_info_about_container(self, container_id: CONTAINER_ID):
-        # cmd_string = f"docker ps {container_id}"
-        # subprocess.run(cmd_string)
         container = self.client.containers.get(container_id)
         return container.attrs
 
-    def get_logs_of_container(self, container_id: CONTAINER_ID):
+    def get_logs_of_container(self, container_id: CONTAINER_ID, tail: int):
         container = self.client.containers.get(container_id)
-        return container.logs()
+        return container.logs(tail=tail)
 
     def get_stats_of_container(self, container_id: CONTAINER_ID):
         container = self.client.containers.get(container_id)
-        container.start()
+        container.stats()
 
     def get_status_of_container(self, container_id: CONTAINER_ID):
         container = self.client.containers.get(container_id)
@@ -56,18 +59,20 @@ class DockerContainerManager:
     def stop_container(self, container_id: CONTAINER_ID):
         container = self.client.containers.get(container_id)
         container.stop()
-        # cmd_string = f"docker stop {container_id}"
-        # subprocess.run(cmd_string)
+        container.reload()
+        return container.status
 
     def pause_container(self, container_id: CONTAINER_ID):
         container = self.client.containers.get(container_id)
         container.pause()
+        container.reload()
+        return container.status
 
     def run_container(self, container_id: CONTAINER_ID):
         container = self.client.containers.get(container_id)
-        container.run()
-        # cmd_string = f"docker run {container_id}"
-        # subprocess.run(cmd_string)
+        container.start()
+        container.reload()
+        return container.status
 
 
 if __name__ == "__main__":

@@ -1,8 +1,10 @@
+from app.clients.docker_client import DockerContainerManager
 from app.constants import CONTAINER_ID
 
 
 def get_list_available_containers_for_user():
-    pass
+    client = DockerContainerManager()
+    return client.get_list_of_containers()
 
 
 def get_container_by_id_for_user(container_id: CONTAINER_ID):

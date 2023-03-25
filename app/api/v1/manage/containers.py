@@ -47,9 +47,6 @@ def delete_all_containers_for_user_view():
 
 @manage_containers_router.post(
     "/reassign",
-    # responses={
-    #     201: {s}
-    # },
 )
 def reassign_all_containers_to_another_user_or_group_view():
     is_success = actions.reassign_all_containers_to_another_user_or_group()

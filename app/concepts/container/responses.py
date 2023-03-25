@@ -12,5 +12,6 @@ class ContainerStatusResponse(ContainerIDResponse):
 
 
 class ContainerResponse(ContainerStatusResponse):
-    # smth else
-    ...
+    image: str
+    name: str
+    short_id: str
