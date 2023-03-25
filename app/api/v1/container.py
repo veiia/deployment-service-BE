@@ -13,8 +13,7 @@ containers_router = APIRouter(prefix="/container", tags=["container"])
 
 @containers_router.post("", response_model=responses.ContainerResponse)
 def create_container(request: requests.ContainerCreationRequest):
-    # TODO: ДОДЕЛАТЬ ПОДТЯГИВАНИЕ ЛЮБЫХ ОБРАЗОВ
-    container = actions.create_container(image=request.image)
+    container = actions.create_container(request=request)
     return container
 
 

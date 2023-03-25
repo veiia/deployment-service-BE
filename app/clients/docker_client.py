@@ -17,8 +17,12 @@ class DockerContainerManager:
     def get_list_of_containers(self):
         return self.client.containers.list()
 
-    def create_container(self, image: str) -> CONTAINER_ID:
-        container = self.client.containers.create(image)
+    def create_container(self, image: str, name: str) -> CONTAINER_ID:
+        try:
+            self.client.images.get(image)
+        except docker.errors.ImageNotFound:
+            self.client.images.pull(image)
+        container = self.client.containers.create(image=image, name=name)
         return container
 
     def delete_container(
@@ -73,31 +77,3 @@ class DockerContainerManager:
         container.start()
         container.reload()
         return container.status
-
-
-if __name__ == "__main__":
-    docker_client = DockerContainerManager()
-    status = docker_client.get_status_of_container("1781fe434860")
-    image = docker_client.get_image_of_container("1781fe434860")
-    print(status, image)
-    logs = docker_client.get_logs_of_container("1781fe434860")
-    print(logs)
-    info = docker_client.get_info_about_container("1781fe434860")
-    print(info)
-    created_container = docker_client.create_container()
-    print(created_container.__dir__())
-    created_container.start()
-    print(docker_client.get_list_of_containers())
-    # created_container_id = docker_client.create_container()
-    # created_container_id = 'bbed64f225f3'
-    # print(created_container_id)
-    # created_container_info = docker_client.get_info_about_container(created_container_id)
-    # print(created_container_info)
-    # created_container_status = docker_client.get_status_of_container(created_container_id)
-    # print(created_container_status)
-    # created_container_is_stopped = docker_client.stop_container(created_container_id)
-    # print(created_container_is_stopped)
-    # created_container_is_run = docker_client.run_container(created_container_id)
-    # print(created_container_is_run)
-    # created_container_is_deleted = docker_client.delete_container(created_container_id)
-    # print(created_container_is_deleted)

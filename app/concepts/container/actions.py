@@ -1,13 +1,16 @@
 from app.clients.docker_client import DockerContainerManager
 from app.concepts.container.models import Container, ContainerStatus, Logs
+from app.concepts.container.requests import ContainerCreationRequest
 from app.constants import CONTAINER_ID
 
 
 manager = DockerContainerManager()
 
 
-def create_container(image: str) -> Container:
-    container = manager.create_container(image=image)
+def create_container(request: ContainerCreationRequest) -> Container:
+    image = request.image
+    container_name = f"{request.owner_username}_{request.project_uuid}"
+    container = manager.create_container(image=image, name=container_name)
     return Container(
         id=container.id,
         status=container.status,

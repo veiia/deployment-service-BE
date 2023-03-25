@@ -12,10 +12,8 @@ manage_containers_router = APIRouter(
 
 
 @manage_containers_router.get("", response_model=responses.ContainersListResponse)
-def get_list_available_containers_for_user_view():  # TODO LIMIT OFFSET
-    # if user not found:
-    #     return 404
-    containers = actions.get_list_available_containers_for_user()
+def get_list_available_containers_for_user_view(username: str):  # TODO LIMIT OFFSET
+    containers = actions.get_list_available_containers_for_user(username=username)
     return containers
 
 
