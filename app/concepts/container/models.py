@@ -20,3 +20,7 @@ class Container(ContainerStatus):
     image: str
     name: str
     short_id: str
+
+
+class Logs(ContainerID):
+    logs: list[str]

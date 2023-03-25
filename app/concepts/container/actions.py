@@ -1,5 +1,5 @@
 from app.clients.docker_client import DockerContainerManager
-from app.concepts.container.models import Container, ContainerStatus
+from app.concepts.container.models import Container, ContainerStatus, Logs
 from app.constants import CONTAINER_ID
 
 
@@ -40,16 +40,18 @@ def pause_container(container_id: CONTAINER_ID) -> ContainerStatus:
     return ContainerStatus(id=container_id, status=status)
 
 
-def get_info_about_container(container_id: CONTAINER_ID):
+def get_info_about_container(container_id: CONTAINER_ID) -> dict:
     container_attrs = manager.get_info_about_container(container_id)
     return container_attrs
 
 
-def get_status_of_container(container_id: CONTAINER_ID):
+def get_status_of_container(container_id: CONTAINER_ID) -> ContainerStatus:
     status = manager.get_status_of_container(container_id)
     return ContainerStatus(id=container_id, status=status)
 
 
-def get_logs_of_container(container_id: CONTAINER_ID, tail: int = 20):
-    status = manager.get_logs_of_container(container_id, tail)
-    return ContainerStatus(id=container_id, status=status)
+def get_logs_of_container(container_id: CONTAINER_ID, tail: int = 20) -> Logs:
+    bytes_string_of_logs = manager.get_logs_of_container(container_id, tail)
+    split_logs_by_lines = bytes_string_of_logs.decode("utf-8").split('\n')
+    logs = [line for line in split_logs_by_lines]
+    return Logs(id=container_id, logs=logs)

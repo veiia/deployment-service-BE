@@ -15,3 +15,7 @@ class ContainerResponse(ContainerStatusResponse):
     image: str
     name: str
     short_id: str
+
+
+class LogsResponse(ContainerIDResponse):
+    logs: list[str]

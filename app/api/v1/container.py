@@ -104,3 +104,15 @@ def get_status_of_container(container_id: CONTAINER_ID):
         return JSONResponse(
             content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
         )
+
+
+@containers_router.get(
+    "/{container_id}/logs", response_model=responses.LogsResponse
+)
+def get_status_of_container(container_id: CONTAINER_ID, tail: int = 20):
+    try:
+        return actions.get_logs_of_container(container_id=container_id, tail=tail)
+    except docker.errors.NotFound:
+        return JSONResponse(
+            content={"message": f"Container {container_id} Not Found"}, status_code=status.HTTP_404_NOT_FOUND
+        )
