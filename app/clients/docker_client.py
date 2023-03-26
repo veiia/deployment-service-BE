@@ -19,7 +19,10 @@ class DockerContainerManager:
     def get_list_of_containers(self, username: str) -> list[Any]:
         return self.client.containers.list()
 
-    def create_container(self, image: str, name: str) -> CONTAINER_ID:
+    def get_container(self, container_id: CONTAINER_ID):
+        return self.client.containers.get(container_id)
+
+    def create_container(self, image: str, name: str):
         try:
             self.client.images.get(image)
         except docker.errors.ImageNotFound:
@@ -86,8 +89,15 @@ class DockerContainerManager:
         container.reload()
         return container.status
 
-    def rename_container(self, container_id: CONTAINER_ID, new_name: str):
+    def rename_container(
+        self, container_id: CONTAINER_ID, old_prefix: str, new_prefix: str
+    ):
         container = self.client.containers.get(container_id)
-        container.rename(new_name)
-        container.reload()
+        try:
+            old_name = container.name
+            new_name = old_name.replace(old_prefix, new_prefix)
+            container.rename(new_name)
+            container.reload()
+        except docker.errors.APIError:
+            pass
         return container

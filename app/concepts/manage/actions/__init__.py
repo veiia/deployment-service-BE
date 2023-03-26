@@ -1,7 +1,6 @@
 from .containers import get_list_available_containers_for_user
 from .containers import get_container_by_id_for_user
 from .containers import delete_container_by_id_for_user
-from .containers import delete_all_containers_for_user
 from .containers import reassign_all_containers_to_another_user_or_group
 from .containers import reassign_container_to_another_user_or_group
 from .images import get_list_available_images_for_user
