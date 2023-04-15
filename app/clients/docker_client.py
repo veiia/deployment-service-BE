@@ -16,7 +16,7 @@ class DockerContainerManager:
         return cls._instance
 
     def __init__(self):
-        self.client = docker.client.DockerClient(base_url='unix://var/run/docker.sock')
+        self.client = docker.client.DockerClient(base_url="unix://var/run/docker.sock")
         # self.client = docker.client.DockerClient(base_url=DOCKER_CLIENT_URL)
 
     def get_list_of_containers(self, username: str) -> list[Any]:
