@@ -7,6 +7,9 @@ pythonpath := $(pythonpath):$(PWD)/app
 run:
 	docker-compose up -d deployment-service
 
+run-build:
+	 docker-compose up --build -d deployment-service
+
 build:
 	docker-compose build deployment-service
 
