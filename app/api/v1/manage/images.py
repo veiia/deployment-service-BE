@@ -41,11 +41,3 @@ def delete_image_by_id_for_user_view(image_id: IMAGE_ID):
     if is_success:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     return Response(status_code=status.HTTP_404_NOT_FOUND)
-
-
-@manage_images_router.delete("")
-def delete_all_images_for_user_view():
-    is_success = actions.delete_all_images_for_user()
-    if is_success:
-        return Response(status_code=status.HTTP_204_NO_CONTENT)
-    return Response(status_code=status.HTTP_404_NOT_FOUND)
